@@ -1,0 +1,13 @@
+cms_breadcrumbs.admin_page:
+  title: CMS Breadcrumbs
+  route_name: cms_breadcrumbs.admin_page
+  parent: system.admin
+  description: 'CMS Breadcrumbs management'
+  weight: 100
+
+cms_breadcrumbs.set_breadcrumbs:
+  title: 'Set Breadcrumbs'
+  description: 'Set CMS breadcrumbs'
+  parent: cms_breadcrumbs.admin_page
+  route_name: cms_breadcrumbs.set_breadcrumbs
+  weight: 100

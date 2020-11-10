@@ -1,0 +1,5 @@
+name: CMS Breadcrumbs
+description: 'Set ISED site breadcrumbs.'
+package: ISED Custom
+type: module
+core: 8.x
