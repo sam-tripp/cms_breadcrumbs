@@ -1,0 +1,6 @@
+services:
+  cms_breadcrumbs.breadcrumb:
+    class: Drupal\cms_breadcrumbs\Breadcrumb\BreadcrumbBuilder
+    arguments: ['@config.factory', '@entity_type.manager', '@language_manager', '@request_stack', '@title_resolver', '@token', '@path_alias.manager', '@path.matcher']
+    tags:
+      - { name: breadcrumb_builder, priority: 1000 }

@@ -6,18 +6,19 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\HtmlResponse;
 use Symfony\Component\Validator\Constraints\Length;
+use Drupal\Core\Breadcrumb\Breadcrumb;
 
 class BreadcrumbsForm extends FormBase {
-
+  
+  public $breadcrumb_fields = 4;
+  
   public function getFormId() {
-    return 'breadcrumbs_form';
+    return 'ised_breadcrumbs';
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-    $breadcrumb_fields = 4;
-
-    for ($i = 1; $i < $breadcrumb_fields + 1; $i++) {
+    for ($i = 1; $i < $this->breadcrumb_fields + 1; $i++) {
 
         // Set text field
         $num = strval($i);
@@ -54,6 +55,7 @@ class BreadcrumbsForm extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    
   }
 }
 

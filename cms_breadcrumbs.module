@@ -1,21 +1,10 @@
 <?php
 
-function breadcrumbs_theme($existing, $type, $theme, $path) {
-    return [
-      'breadcrumbs' => [
-        'variables' => [
-          'test_var' => NULL,
-          'data' => [],
-        ]
-      ]
-    ];
-}
 
-function hook_system_breadcrumb_alter(\Drupal\Core\Breadcrumb\Breadcrumb &$breadcrumb, \Drupal\Core\Routing\RouteMatchInterface $route_match, array $context) {
+/*
+function cms_breadcrumbs_system_breadcrumb_alter(\Drupal\Core\Breadcrumb\Breadcrumb &$breadcrumb, \Drupal\Core\Routing\RouteMatchInterface $route_match, array $context) {
 
-    // Add an item to the end of the breadcrumb.
-    $breadcrumb
-      ->addLink(\Drupal\Core\Link::createFromRoute(t('Text'), 'example_route_name'));
-  }
+}*/
+  
 
 

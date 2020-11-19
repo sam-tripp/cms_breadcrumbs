@@ -1,5 +1,5 @@
 {
-    "name": "sam-tripp/breadcrumbs",
+    "name": "sam-tripp/cms_breadcrumbs",
     "description": "CMS Breadcrumbs",
     "type": "drupal-module",
     "license": "GPL-2.0+"
