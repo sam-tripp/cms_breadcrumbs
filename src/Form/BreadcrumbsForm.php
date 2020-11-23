@@ -2,60 +2,72 @@
 
 namespace Drupal\cms_breadcrumbs\Form;
 
-use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\HtmlResponse;
 use Symfony\Component\Validator\Constraints\Length;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 
-class BreadcrumbsForm extends FormBase {
+class BreadcrumbsForm extends ConfigFormBase {
   
-  public $breadcrumb_fields = 4;
-  
+  /**
+   * {@inheritdoc}
+   */
   public function getFormId() {
-    return 'ised_breadcrumbs';
+    return 'cms_breadcrumbs_settings';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return ['cms_breadcrumbs.settings'];
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $config = $this->config('cms_breadcrumbs.settings');
 
-    for ($i = 1; $i < $this->breadcrumb_fields + 1; $i++) {
-
-        // Set text field
-        $num = strval($i);
-        $form["text_$i"] = [
-            '#type' => 'textfield',
-            '#title' => 'Breadcrumb Text',
-            '#description' => '',
-            '#default_value' => '',
-        ];
-
-        // Set route field
-        $form["url_$i"] = [
-            '#type' => 'textfield',
-            '#title' => 'Breadcrumb URL',
-            '#description' => '',
-            '#default_value' => '',
-        ];
-
-    }
- 
-    $form['submit'] = [
-      '#type' => 'submit',
-      '#value' => 'Set Breadcrumbs',
-      '#tableselect' => False,
-      '#tabledrag' => False,
+    // General settings
+    $general_settings = [
+      '#type'   => 'details',
+      '#title'  => 'General settings',
+      '#open'   => TRUE,
     ];
 
-    $form_state->disableRedirect(true);
+    $general_settings['home'] = [
+      '#type'           => 'textfield',
+      '#title'          => 'Home',
+      '#description'    => 'Set the title of the \'Home\' link.',
+      '#default_value'  => 'Canada.ca',
+    ];
 
-    return $form;
+    $general_settings['home_url'] = [
+      '#type'           => 'textfield',
+      '#title'          => 'Home',
+      '#description'    => 'Set the URL of the \'Home\' link.',
+      '#default_value'  => 'https://www.canada.ca/en.html',
+    ];
+
+    $form = [];
+    $form['cms_breadcrumbs'][] = $general_settings;
+
+    return parent::buildForm($form, $form_state);
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    
+
+    $settings = $this->configFactory->getEditable('cms_breadcrumbs.settings');
+
+    $values = $form_state->cleanValues()->getValues();
+    foreach($values as $field_key => $field_value) {
+      $settings->set($field_key, $field_value);
+    }
+    $settings->save();
+
+    parent::submitForm($form, $form_state);
   }
 }
 

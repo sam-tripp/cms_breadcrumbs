@@ -1,15 +1,7 @@
-cms_breadcrumbs.admin_page:
-  path: '/admin/cms_breadcrumbs'
+cms_breadcrumbs.settings_form:
+  path: '/admin/config/user-interface/cms_breadcrumbs'
   defaults:
-    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'CMS Breadcrumbs'
-  requirements:
-    _permission: 'access content'
-
-cms_breadcrumbs.set_breadcrumbs:
-  path: '/admin/set_breadcrumbs'
-  defaults:
-    _title: 'Set Breadcrumbs'
     _form: '\Drupal\cms_breadcrumbs\Form\BreadcrumbsForm'
   requirements:
-    _permission: 'access content'
+    _permission: 'administer cms breadcrumbs'

@@ -1,5 +1,5 @@
 name: CMS Breadcrumbs
-description: 'Set ISED site breadcrumbs.'
+description: 'Set Government of Canada website breadcrumbs.'
 package: ISED Custom
 type: module
 core: 8.x

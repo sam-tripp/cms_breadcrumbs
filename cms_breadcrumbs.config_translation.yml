@@ -1,0 +1,5 @@
+cms_breadcrumbs.settings_form:
+  title: 'CMS Breadcrumbs'
+  base_route_name: cms_breadcrumbs.settings_form
+  names:
+    - cms_breadcrumbs.settings

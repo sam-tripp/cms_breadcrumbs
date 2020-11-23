@@ -1,13 +1,6 @@
-cms_breadcrumbs.admin_page:
-  title: CMS Breadcrumbs
-  route_name: cms_breadcrumbs.admin_page
-  parent: system.admin
-  description: 'CMS Breadcrumbs management'
-  weight: 100
-
-cms_breadcrumbs.set_breadcrumbs:
-  title: 'Set Breadcrumbs'
-  description: 'Set CMS breadcrumbs'
-  parent: cms_breadcrumbs.admin_page
-  route_name: cms_breadcrumbs.set_breadcrumbs
+cms_breadcrumbs.settings_form:
+  title: 'CMS Breadcrumbs'
+  description: 'Set CMS header breadcrumbs.'
+  parent: system.admin_config_ui
+  route_name: cms_breadcrumbs.settings_form
   weight: 100
