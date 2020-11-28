@@ -80,12 +80,28 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // Get current language
     $curr_lang = $this->languageManager->getCurrentLanguage()->getId();
     
-    // Hard-coded header breadcrumbs for Clean Growth Hub
-    // TODO add translation
-    $links[] = \Drupal\Core\Link::fromTextAndUrl($this->config->get('home'), Url::fromUri($this->config->get('home_url')));
-    $links[] = \Drupal\Core\Link::fromTextAndUrl('Science and innovation', Url::fromUri('https://www.canada.ca/en/services/science.html'));
-    $links[] = \Drupal\Core\Link::fromTextAndUrl('R&D and innovation', Url::fromUri('https://www.canada.ca/en/services/science/innovation.html'));
-    $links[] = \Drupal\Core\Link::fromTextAndUrl('Clean technology', Url::fromUri('https://www.canada.ca/en/services/science/innovation/clean-technology.html'));
+    // Set configured header breadcrumbs
+    if ($breadcrumb_settings = $this->config->get($curr_lang)) {
+      $half_length = count($breadcrumb_settings) / 2;
+      for ($i = 0; $i < $half_length; $i++ ) {
+        $title = 'title_' . $i;
+        $url = 'url_' . $i;
+        if (!empty($breadcrumb_settings[$title]) && !empty($breadcrumb_settings[$url])) {
+          $links[] = \Drupal\Core\Link::fromTextAndUrl($breadcrumb_settings[$title], Url::fromUri($breadcrumb_settings[$url]));
+        }
+      }
+    }
+ 
+    // debug
+    if ($fp = fopen("/tmp/test_en", "w")) {
+      fwrite($fp, print_r($this->config->get('en'), TRUE));
+      fclose($fp);
+    } 
+    if ($fp = fopen("/tmp/test_fr", "w")) {
+      fwrite($fp, print_r($this->config->get('fr'), TRUE));
+      fclose($fp);
+    } 
+    
 
     // If this page is not the home page, add home link
     if (!(\Drupal::service('path.matcher')->isFrontPage())) {
