@@ -12,6 +12,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
@@ -23,18 +25,18 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $config;
 
   /**
+   * Drupal site config object. 
+   * 
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $siteConfig;
+
+  /**
    * The router request context.
    *
    * @var \Drupal\Core\Routing\RequestContext
    */
   protected $context;
-
-  /**
-   * The title resolver.
-   *
-   * @var \Drupal\Core\Controller\TitleResolverInterface
-   */
-  protected $titleResolver;
 
   /**
    * The language manager.
@@ -44,16 +46,32 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $languageManager;
 
   /**
+   * The request stack service.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * The title resolver.
+   *
+   * @var \Drupal\Core\Controller\TitleResolverInterface
+   */
+  protected $titleResolver;
+
+
+  /**
    * Constructor for BreadcrumbBuilder.
    * 
    */
-  public function __construct(ConfigFactoryInterface $config_factory, RequestContext $context, LanguageManagerInterface $language_manager, TitleResolverInterface $title_resolver) {
+  public function __construct(ConfigFactoryInterface $config_factory, RequestContext $context, RequestStack $request_stack, LanguageManagerInterface $language_manager, TitleResolverInterface $title_resolver) {
     
     $this->config = $config_factory->get('cms_breadcrumbs.settings');
+    $this->siteConfig = $config_factory->get('system.site');
     $this->context = $context;
     $this->languageManager = $language_manager;
+    $this->requestStack = $request_stack;
     $this->titleResolver = $title_resolver;
-    
   }
     
     
@@ -91,28 +109,37 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
         }
       }
     }
- 
+
+    /* Attempt 1 - path-based breadcrumbs
+    // Get current request from request stack
+    $request = $this->requestStack->getCurrentRequest();
+
+    // Resolve breadcrumbs from path
+    $path = trim($this->context->getPathInfo(), '/');
+    $path = urldecode($path);
+    $path_elements = explode('/', $path);
+
+    // Resolve home page title - request not working
+    $router = \Drupal::service('router.no_access_checks');
+    $home_route = $router->match('/');
+
+    // todo make request object from url 
+
+    $home_title = $this->titleResolver->getTitle($request, $home_route['_route_object']);
+
     // debug
-    if ($fp = fopen("/tmp/test_en", "w")) {
-      fwrite($fp, print_r($this->config->get('en'), TRUE));
+    if ($fp = fopen("/tmp/route", "w")) {
+      fwrite($fp, print_r($home_title, TRUE));
       fclose($fp);
-    } 
-    if ($fp = fopen("/tmp/test_fr", "w")) {
-      fwrite($fp, print_r($this->config->get('fr'), TRUE));
-      fclose($fp);
-    } 
-    
+    } */
+
+    // Get site name from system config
+    $site_name = $this->siteConfig->get('name');
 
     // If this page is not the home page, add home link
     if (!(\Drupal::service('path.matcher')->isFrontPage())) {
-      $links[] = \Drupal\Core\Link::fromTextAndUrl('Clean Growth Hub', Url::fromRoute('<front>', [], ['absolute' => TRUE]));
+      $links[] = \Drupal\Core\Link::fromTextAndUrl($site_name, Url::fromRoute('<front>', [], ['absolute' => TRUE]));
     }
-
-
-    /* Resolve breadcrumbs from path
-    $path = trim($this->context->getPathInfo(), '/');
-    $path = urldecode($path);
-    $path_elements = explode('/', $path);*/
 
     $breadcrumb->addCacheContexts(['route', 'url.path', 'languages']);
 

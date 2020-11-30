@@ -24,6 +24,9 @@ class BreadcrumbsForm extends ConfigFormBase {
     return ['cms_breadcrumbs.settings'];
   }
 
+  // TODO remove field hardcoding (AJAX plugin)
+  // TODO form layout side-by-side columns for FR and EN
+  // Look into serialize() https://www.php.net/manual/en/function.serialize.php
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('cms_breadcrumbs.settings');
     //$en_config = $config->get('en');
@@ -87,6 +90,21 @@ class BreadcrumbsForm extends ConfigFormBase {
       '#title'          => 'URL',
       '#description'    => 'Set the URL of the second leading breadcrumb.',
       '#default_value'  => $config->get('en')['url_1'] ?? '',
+    ];
+
+    // Second header breadcrumb
+    $general_settings_fr['fr_title_1'] = [
+      '#type'           => 'textfield',
+      '#title'          => 'Title',
+      '#description'    => 'Set the title of the second leading breadcrumb.',
+      '#default_value'  => $config->get('fr')['title_1'] ?? '',
+    ];
+
+    $general_settings_fr['fr_url_1'] = [
+      '#type'           => 'textfield',
+      '#title'          => 'URL',
+      '#description'    => 'Set the URL of the second leading breadcrumb.',
+      '#default_value'  => $config->get('fr')['url_1'] ?? '',
     ];
 
     
