@@ -6,3 +6,4 @@ Reference Modules:
 
 - [Easy Breadcrumb](https://www.drupal.org/project/easy_breadcrumb)
 - [Custom Breadcrumbs](https://www.drupal.org/project/custom_breadcrumbs)
+- [Menu Breadcrumb](https://www.drupal.org/project/menu_breadcrumb)
