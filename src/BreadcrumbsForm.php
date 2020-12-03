@@ -1,14 +1,13 @@
 <?php
 
-namespace Drupal\cms_breadcrumbs\Form;
+namespace Drupal\cms_breadcrumbs;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\HtmlResponse;
 use Symfony\Component\Validator\Constraints\Length;
-use Drupal\Core\Breadcrumb\Breadcrumb;
 
-class BreadcrumbsForm extends ConfigFormBase {
+class BreadcrumbSettings extends ConfigFormBase {
   
   /**
    * {@inheritdoc}
@@ -21,14 +20,14 @@ class BreadcrumbsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['cms_breadcrumbs.settings'];
+    return [BreadcrumbConstants::MODULE_SETTINGS];
   }
 
   // TODO remove field hardcoding (AJAX plugin)
   // TODO form layout side-by-side columns for FR and EN
   // Look into serialize() https://www.php.net/manual/en/function.serialize.php
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('cms_breadcrumbs.settings');
+    $config = $this->config(BreadcrumbConstants::MODULE_SETTINGS);
     //$en_config = $config->get('en');
     //$fr_config = $config->get('fr');
 
@@ -108,8 +107,8 @@ class BreadcrumbsForm extends ConfigFormBase {
     ];
 
     
-    $form['cms_breadcrumbs'][] = $general_settings_en;
-    $form['cms_breadcrumbs'][] = $general_settings_fr;
+    $form[BreadcrumbConstants::MODULE_NAME][] = $general_settings_en;
+    $form[BreadcrumbConstants::MODULE_NAME][] = $general_settings_fr;
 
     return parent::buildForm($form, $form_state);
   }
@@ -119,7 +118,7 @@ class BreadcrumbsForm extends ConfigFormBase {
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-    $settings = $this->configFactory->getEditable('cms_breadcrumbs.settings');
+    $settings = $this->configFactory->getEditable(BreadcrumbConstants::MODULE_SETTINGS);
 
     $values = $form_state->cleanValues()->getValues();
 

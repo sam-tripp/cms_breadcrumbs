@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\cms_breadcrumbs\Breadcrumb;
+namespace Drupal\cms_breadcrumbs;
 
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
@@ -15,7 +15,6 @@ use Drupal\Core\Url;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Menu\MenuActiveTrail;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
@@ -23,7 +22,6 @@ use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 
-use Drupal\epic_import\Classes\Menu;
 
 class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
@@ -103,7 +101,7 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, RequestContext $context, RequestStack $request_stack, LanguageManagerInterface $language_manager, TitleResolverInterface $title_resolver, ModuleHandlerInterface $module_handler, MenuActiveTrailInterface $menu_active_trail, MenuLinkManagerInterface $menu_link_manager) {
     
-    $this->config = $config_factory->get('cms_breadcrumbs.settings');
+    $this->config = $config_factory->get(BreadcrumbConstants::MODULE_SETTINGS);
     $this->siteConfig = $config_factory->get('system.site');
     $this->context = $context;
     $this->languageManager = $language_manager;
@@ -160,7 +158,7 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
     }
 
     // load menu trail
-    $menu_name = 'sidebar';
+    $menu_name = BreadcrumbConstants::ACTIVE_MENU;
     $trail_ids = $this->menuActiveTrail->getActiveTrailIds($menu_name);
     $curr_trail_id = array_shift($trail_ids);
 
@@ -170,7 +168,6 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     // load menu link content object
     $menu_content = $this->entityTypeManager->getStorage('menu_link_content')->loadByProperties(['menu_name' => $menu_name]);
-
 
     // generate breadcrumbs from active trail ids
     if (!empty($trail_ids)) {
@@ -187,7 +184,6 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
       }
     }
 
-     
     $breadcrumb->addCacheableDependency($this->config);
     $breadcrumb->addCacheableDependency($this->siteConfig);
     $breadcrumb->addCacheContexts(['route', 'url.path', 'languages']);
