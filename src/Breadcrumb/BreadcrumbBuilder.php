@@ -159,52 +159,34 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $links[] = \Drupal\Core\Link::fromTextAndUrl($site_name, Url::fromRoute('<front>', [], ['absolute' => TRUE]));
     }
 
-    /* Attempt 2 - menu breadcrumbs*/
-    // https://drupal.stackexchange.com/questions/252503/can-menutree-load-a-menus-items-including-children
-    // https://stackoverflow.com/questions/36768732/displaying-sub-menu-tree-in-drupal-8
-    // https://drupal.stackexchange.com/questions/202953/how-to-get-all-parent-menu-items-titles-of-the-current-node 
-
     // load menu trail
     $menu_name = 'sidebar';
-    $trail_ids = $this->menuActiveTrail->getActiveTrailIds('main');
+    $trail_ids = $this->menuActiveTrail->getActiveTrailIds($menu_name);
+    $curr_trail_id = array_shift($trail_ids);
 
     // load node
     $nid = $route_match->getRawParameter('node');
     $node = $this->entityTypeManager->getStorage('node')->load($nid);
-    $uuid = $node->uuid();
 
     // load menu link content object
     $menu_content = $this->entityTypeManager->getStorage('menu_link_content')->loadByProperties(['menu_name' => $menu_name]);
-    
-    // load menu link for current node
-    $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
-    $menu_links = $menu_link_manager->loadLinksByRoute('entity.node.canonical', array('node' => $nid));
-    $menu_link = reset($menu_links);
 
-    $path = trim($this->context->getPathInfo(), '/');
-    $path = urldecode($path);
-    $path_elements = explode('/', $path);
-    //$path_elements = array_reverse($path_elements);
-    
-    // debug
-    if ($fp = fopen("/tmp/LINK", "w")) {
-      fwrite($fp, print_r($menu_link, TRUE));
-      fclose($fp);
-    } 
-    
-    /*$currentPluginId = $menu_link->getPluginId();
 
-    foreach (array_reverse($trail_ids) as $key => $value) {
-      if ($value && $value !== $currentPluginId) {
-        $links[] = 
-          new Link(
-            $menu_link_manager->createInstance($value)->getTitle(),
-            $menu_link_manager->createInstance($value)->getUrlObject()
-          )
-        ;
-        $breadcrumb->addCacheableDependency($menu_link_manager);
-     }
-    }*/
+    // generate breadcrumbs from active trail ids
+    if (!empty($trail_ids)) {
+      foreach (array_reverse($trail_ids) as $key => $value) {
+        if ($value && $value !== $curr_trail_id) {
+          $links[] = 
+            new Link(
+              $this->menuLinkManager->createInstance($value)->getTitle(),
+              $this->menuLinkManager->createInstance($value)->getUrlObject()
+            )
+          ;
+          $breadcrumb->addCacheableDependency($this->menuLinkManager);
+        }
+      }
+    }
+
      
     $breadcrumb->addCacheableDependency($this->config);
     $breadcrumb->addCacheableDependency($this->siteConfig);
