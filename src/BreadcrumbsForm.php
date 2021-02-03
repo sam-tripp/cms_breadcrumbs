@@ -91,7 +91,6 @@ class BreadcrumbsForm extends ConfigFormBase {
       '#default_value'  => $config->get('en')['url_1'] ?? '',
     ];
 
-    // Second header breadcrumb
     $general_settings_fr['fr_title_1'] = [
       '#type'           => 'textfield',
       '#title'          => 'Title',
@@ -104,6 +103,64 @@ class BreadcrumbsForm extends ConfigFormBase {
       '#title'          => 'URL',
       '#description'    => 'Set the URL of the second leading breadcrumb.',
       '#default_value'  => $config->get('fr')['url_1'] ?? '',
+    ];
+
+    // Third header breadcrumb
+    $general_settings_en['en_title_2'] = [
+      '#type'           => 'textfield',
+      '#title'          => 'Title',
+      '#description'    => 'Set the title of the third leading breadcrumb.',
+      '#default_value'  => $config->get('en')['title_2'] ?? '',
+    ];
+
+    $general_settings_en['en_url_2'] = [
+      '#type'           => 'textfield',
+      '#title'          => 'URL',
+      '#description'    => 'Set the URL of the third leading breadcrumb.',
+      '#default_value'  => $config->get('en')['url_2'] ?? '',
+    ];
+
+    $general_settings_fr['fr_title_2'] = [
+      '#type'           => 'textfield',
+      '#title'          => 'Title',
+      '#description'    => 'Set the title of the third leading breadcrumb.',
+      '#default_value'  => $config->get('fr')['title_2'] ?? '',
+    ];
+
+    $general_settings_fr['fr_url_2'] = [
+      '#type'           => 'textfield',
+      '#title'          => 'URL',
+      '#description'    => 'Set the URL of the third leading breadcrumb.',
+      '#default_value'  => $config->get('fr')['url_2'] ?? '',
+    ];
+
+    // Fourth header breadcrumb
+    $general_settings_en['en_title_3'] = [
+      '#type'           => 'textfield',
+      '#title'          => 'Title',
+      '#description'    => 'Set the title of the fourth leading breadcrumb.',
+      '#default_value'  => $config->get('en')['title_3'] ?? '',
+    ];
+
+    $general_settings_en['en_url_3'] = [
+      '#type'           => 'textfield',
+      '#title'          => 'URL',
+      '#description'    => 'Set the URL of the fourth leading breadcrumb.',
+      '#default_value'  => $config->get('en')['url_3'] ?? '',
+    ];
+
+    $general_settings_fr['fr_title_3'] = [
+      '#type'           => 'textfield',
+      '#title'          => 'Title',
+      '#description'    => 'Set the title of the fourth leading breadcrumb.',
+      '#default_value'  => $config->get('fr')['title_3'] ?? '',
+    ];
+
+    $general_settings_fr['fr_url_3'] = [
+      '#type'           => 'textfield',
+      '#title'          => 'URL',
+      '#description'    => 'Set the URL of the fourth leading breadcrumb.',
+      '#default_value'  => $config->get('fr')['url_3'] ?? '',
     ];
 
     
