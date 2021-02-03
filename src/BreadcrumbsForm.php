@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\HtmlResponse;
 use Symfony\Component\Validator\Constraints\Length;
 
-class BreadcrumbSettings extends ConfigFormBase {
+class BreadcrumbsForm extends ConfigFormBase {
   
   /**
    * {@inheritdoc}
