@@ -33,6 +33,30 @@ class BreadcrumbsForm extends ConfigFormBase {
 
     $form = [];
 
+    // Setting to include home page breadcrumb segment - default ON
+    $include_home_segment = $config->get(BreadcrumbConstants::INCLUDE_HOME_SEGMENT);
+    if (!isset($include_home_segment)) {
+      $include_home_segment = TRUE;
+    }
+    $form[BreadcrumbConstants::INCLUDE_HOME_SEGMENT] = [
+      '#type'           => 'checkbox',
+      '#title'          => 'Include the front page as a segment in the breadcrumb',
+      '#description'    => 'Uncheck to remove the front page of this Drupal site from the breadcrumb trail.',
+      '#default_value'  => $include_home_segment,
+    ];
+
+    // Settings to append active menu crumbs - default ON
+    $append_active_menu = $config->get(BreadcrumbConstants::APPEND_ACTIVE_MENU_BREADCRUMBS);
+    if (!isset($append_active_menu)) {
+      $append_active_menu = TRUE;
+    }
+    $form[BreadcrumbConstants::APPEND_ACTIVE_MENU_BREADCRUMBS] = [
+      '#type'          => 'checkbox',
+      '#title'         => 'Append active menu trail to breadcrumb',
+      '#description'   => 'Uncheck to remove active menu links from breadcrumb trail.',
+      '#default_value' => $append_active_menu,
+    ];
+
     // English settings
     $general_settings_en = [
       '#type'   => 'details',
@@ -46,6 +70,8 @@ class BreadcrumbsForm extends ConfigFormBase {
       '#title'  => 'Paramètres générales',
       '#open'   => TRUE,
     ];
+
+    // TODO - Add AJAX to generate these fields when provided number of required header crumbs
 
     // First header breadcrumb
     $general_settings_en['en_title_0'] = [
@@ -163,7 +189,6 @@ class BreadcrumbsForm extends ConfigFormBase {
       '#default_value'  => $config->get('fr')['url_3'] ?? '',
     ];
 
-    
     $form[BreadcrumbConstants::MODULE_NAME][] = $general_settings_en;
     $form[BreadcrumbConstants::MODULE_NAME][] = $general_settings_fr;
 
@@ -179,12 +204,9 @@ class BreadcrumbsForm extends ConfigFormBase {
 
     $values = $form_state->cleanValues()->getValues();
 
-    if ($fp = fopen("/tmp/settings", "w")) {
-          fwrite($fp, print_r($values, TRUE));
-          fclose($fp);
-    } 
     $en_keys = [];
     $fr_keys = [];
+
     foreach($values as $field_key => $field_value) {
       if (preg_match('/^en/', $field_key)) {
         $field_key = preg_replace('/^en\_/', '', $field_key);
@@ -192,6 +214,8 @@ class BreadcrumbsForm extends ConfigFormBase {
       } else if (preg_match('/^fr/', $field_key)) {
         $field_key = preg_replace('/^fr\_/', '', $field_key);
         $fr_keys[$field_key] = $field_value;
+      } else {
+        $settings->set($field_key, $field_value);
       }
     }
     $settings->set('en', $en_keys);

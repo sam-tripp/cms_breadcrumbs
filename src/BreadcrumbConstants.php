@@ -10,4 +10,8 @@ class BreadcrumbConstants {
 
   const ACTIVE_MENU = 'sidebar';
 
+  const INCLUDE_HOME_SEGMENT = 'include_home_segment';
+
+  const APPEND_ACTIVE_MENU_BREADCRUMBS = 'append_active_menu';
+
 }

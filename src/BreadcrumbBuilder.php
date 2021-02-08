@@ -149,40 +149,42 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
       }
     }
 
-    // Get site name from system config
-    $site_name = $this->siteConfig->get('name');
-
-    // add home page link
-    $links[] = \Drupal\Core\Link::fromTextAndUrl($site_name, Url::fromRoute('<front>', [], ['absolute' => TRUE]));
+    if ($breadcrumb_settings = $this->config->get(BreadcrumbConstants::INCLUDE_HOME_SEGMENT)) {
+      // Get site name from system config
+      $site_name = $this->siteConfig->get('name');
+      // add home page link
+      $links[] = \Drupal\Core\Link::fromTextAndUrl($site_name, Url::fromRoute('<front>', [], ['absolute' => TRUE]));
+    }
     
-    // load menu trail
-    $menu_name = BreadcrumbConstants::ACTIVE_MENU;
-    $trail_ids = $this->menuActiveTrail->getActiveTrailIds($menu_name);
-    // originally used to remove the current page crumb
-    //$curr_trail_id = array_shift($trail_ids);
+    if ($breadcrumb_settings = $this->config->get(BreadcrumbConstants::APPEND_ACTIVE_MENU_BREADCRUMBS)) {
+      // load menu trail
+      $menu_name = BreadcrumbConstants::ACTIVE_MENU;
+      $trail_ids = $this->menuActiveTrail->getActiveTrailIds($menu_name);
+      // originally used to remove the current page crumb
+      //$curr_trail_id = array_shift($trail_ids);
 
-    // load node
-    $nid = $route_match->getRawParameter('node');
-    $node = $this->entityTypeManager->getStorage('node')->load($nid);
+      // load node
+      $nid = $route_match->getRawParameter('node');
+      $node = $this->entityTypeManager->getStorage('node')->load($nid);
 
-    // load menu link content object
-    $menu_content = $this->entityTypeManager->getStorage('menu_link_content')->loadByProperties(['menu_name' => $menu_name]);
+      // load menu link content object
+      $menu_content = $this->entityTypeManager->getStorage('menu_link_content')->loadByProperties(['menu_name' => $menu_name]);
 
-    // generate breadcrumbs from active trail ids
-    if (!empty($trail_ids)) {
-      foreach (array_reverse($trail_ids) as $key => $value) {
-        if ($value) {
-          $links[] = 
-            new Link(
-              $this->menuLinkManager->createInstance($value)->getTitle(),
-              $this->menuLinkManager->createInstance($value)->getUrlObject()
-            )
-          ;
-          $breadcrumb->addCacheableDependency($this->menuLinkManager);
+      // generate breadcrumbs from active trail ids
+      if (!empty($trail_ids)) {
+        foreach (array_reverse($trail_ids) as $key => $value) {
+          if ($value) {
+            $links[] = 
+              new Link(
+                $this->menuLinkManager->createInstance($value)->getTitle(),
+                $this->menuLinkManager->createInstance($value)->getUrlObject()
+              )
+            ;
+            $breadcrumb->addCacheableDependency($this->menuLinkManager);
+          }
         }
       }
     }
-
     $breadcrumb->addCacheableDependency($this->config);
     $breadcrumb->addCacheableDependency($this->siteConfig);
     $breadcrumb->addCacheContexts(['route', 'url.path', 'languages']);
