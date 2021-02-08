@@ -152,15 +152,14 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // Get site name from system config
     $site_name = $this->siteConfig->get('name');
 
-    // If this page is not the home page, add home link
-    if (!(\Drupal::service('path.matcher')->isFrontPage())) {
-      $links[] = \Drupal\Core\Link::fromTextAndUrl($site_name, Url::fromRoute('<front>', [], ['absolute' => TRUE]));
-    }
-
+    // add home page link
+    $links[] = \Drupal\Core\Link::fromTextAndUrl($site_name, Url::fromRoute('<front>', [], ['absolute' => TRUE]));
+    
     // load menu trail
     $menu_name = BreadcrumbConstants::ACTIVE_MENU;
     $trail_ids = $this->menuActiveTrail->getActiveTrailIds($menu_name);
-    $curr_trail_id = array_shift($trail_ids);
+    // originally used to remove the current page crumb
+    //$curr_trail_id = array_shift($trail_ids);
 
     // load node
     $nid = $route_match->getRawParameter('node');
@@ -172,7 +171,7 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // generate breadcrumbs from active trail ids
     if (!empty($trail_ids)) {
       foreach (array_reverse($trail_ids) as $key => $value) {
-        if ($value && $value !== $curr_trail_id) {
+        if ($value) {
           $links[] = 
             new Link(
               $this->menuLinkManager->createInstance($value)->getTitle(),
